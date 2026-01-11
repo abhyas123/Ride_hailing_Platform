@@ -25,6 +25,7 @@
     <!-- Modules -->
     <modules>
         <module>discovery-server</module>
+        <module>api-gateway</module>
     </modules>
 
     <!-- Properties -->
