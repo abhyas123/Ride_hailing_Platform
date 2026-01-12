@@ -13,6 +13,18 @@ spring:
           lower-case-service-id: true
 
 
+      routes:
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/auth/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: authCB
+                fallbackUri: forward:/fallback/auth
+
+
 eureka:
   client:
     service-url:
