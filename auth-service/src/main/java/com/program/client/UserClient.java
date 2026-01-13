@@ -1,21 +1,12 @@
 package com.program.client;
 
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
-import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
+@FeignClient(name = "user-service")
+public interface UserClient {
 
-@Component
-public class UserClient {
-
-    private final RestTemplate restTemplate = new RestTemplate();
-
-    public void createUser(String phone) {
-        // DEV MODE – just fire and forget
-        restTemplate.postForObject(
-                "http://user-service/users/internal/create",
-                phone,
-                Void.class
-        );
-    }
+    @PostMapping("/users/internal/create")
+    void createUser(@RequestBody String phone);
 }
-

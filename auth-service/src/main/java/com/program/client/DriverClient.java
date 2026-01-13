@@ -1,20 +1,12 @@
 package com.program.client;
 
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
-import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
+@FeignClient(name = "driver-service")
+public interface DriverClient {
 
-@Component
-public class DriverClient {
-
-    private final RestTemplate restTemplate = new RestTemplate();
-
-    public void createDriver(String phone) {
-        restTemplate.postForObject(
-                "http://driver-service/drivers/internal/create",
-                phone,
-                Void.class
-        );
-    }
+    @PostMapping("/drivers/internal/create")
+    void createDriver(@RequestBody String phone);
 }
-

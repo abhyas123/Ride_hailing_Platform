@@ -33,6 +33,6 @@ jwt:
   expiry: 3600000
 
 twilio:
-  account-sid:
-  auth-token:
-  from-number:
+  account-sid: ""
+  auth-token: ""
+  from-number: "+"

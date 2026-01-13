@@ -24,6 +24,13 @@ spring:
                 name: authCB
                 fallbackUri: forward:/fallback/auth
 
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/users/**
+          filters:
+            - JwtAuthenticationFilter
+
 
 eureka:
   client:
