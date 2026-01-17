@@ -34,10 +34,15 @@ public class AuthController {
     }
 
     @PostMapping("/verify-otp")
-    public ResponseEntity<AuthResponse> verifyOtp(@Valid @RequestBody VerifyOtpRequest req) {
+    public ResponseEntity<AuthResponse> verifyOtp(
+            @Valid @RequestBody VerifyOtpRequest req) {
+
         otpService.verifyOtp(req.getPhone(), req.getOtp());
-        return ResponseEntity.ok(
-                authService.loginOrRegister(req.getPhone(), "RIDER")
-        );
+
+        AuthResponse response =
+                authService.loginOrRegister(req.getPhone(), "RIDER");
+
+        return ResponseEntity.ok(response);
     }
+
 }

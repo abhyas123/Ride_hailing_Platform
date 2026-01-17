@@ -6,33 +6,27 @@ spring:
     name: api-gateway
 
   cloud:
-    gateway:
-      default-filters:
-        - name: RequestRateLimiter
-          args:
-            redis-rate-limiter.replenishRate: 10
-            redis-rate-limiter.burstCapacity: 20
-            key-resolver: "#{@userKeyResolver}"
-        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+     gateway:
+        routes:
 
+          - id: auth-service
+            uri: lb://auth-service
+            predicates:
+              - Path=/auth/**
+            filters:
+              - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
 
-      routes:
-        - id: auth-service
-          uri: lb://auth-service
-          predicates:
-            - Path=/auth/**
-          filters:
-            - name: CircuitBreaker
-              args:
-                name: authCB
-                fallbackUri: forward:/fallback/auth
+          - id: user-service
+            uri: lb://user-service
+            predicates:
+              - Path=/users/**
+            filters:
+              - name: RequestRateLimiter
+                args:
+                  redis-rate-limiter.replenishRate: 10
+                  redis-rate-limiter.burstCapacity: 20
+                  key-resolver: "#{@userKeyResolver}"
 
-        - id: user-service
-          uri: lb://user-service
-          predicates:
-            - Path=/users/**
-          filters:
-            - JwtAuthenticationFilter
 
 
 eureka:

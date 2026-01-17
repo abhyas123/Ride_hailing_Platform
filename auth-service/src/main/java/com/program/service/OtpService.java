@@ -16,14 +16,23 @@ public class OtpService {
     private final StringRedisTemplate redisTemplate;
     private final TwilioConfig twilioConfig;
 
+    private static final String OTP_PREFIX = "OTP:";
+
     public OtpService(StringRedisTemplate redisTemplate, TwilioConfig twilioConfig) {
         this.redisTemplate = redisTemplate;
         this.twilioConfig = twilioConfig;
     }
 
+    private String otpKey(String phone) {
+        return OTP_PREFIX + phone;
+    }
+
     public void sendOtp(String phone) {
+
         String otp = String.valueOf(100000 + new Random().nextInt(900000));
-        redisTemplate.opsForValue().set(phone, otp, 5, TimeUnit.MINUTES);
+
+        redisTemplate.opsForValue()
+                .set(otpKey(phone), otp, 5, TimeUnit.MINUTES);
 
         Message.creator(
                 new PhoneNumber(phone),
@@ -33,10 +42,18 @@ public class OtpService {
     }
 
     public void verifyOtp(String phone, String otp) {
-        String cached = redisTemplate.opsForValue().get(phone);
-        if (cached == null || !cached.equals(otp)) {
-            throw new UnauthorizedException("Invalid or expired OTP");
+
+        String cachedOtp = redisTemplate.opsForValue().get(otpKey(phone));
+
+        if (cachedOtp == null) {
+            throw new UnauthorizedException("OTP expired. Please request again.");
         }
-        redisTemplate.delete(phone);
+
+        if (!cachedOtp.equals(otp)) {
+            throw new UnauthorizedException("Invalid OTP");
+        }
+
+        redisTemplate.delete(otpKey(phone));
     }
 }
+
