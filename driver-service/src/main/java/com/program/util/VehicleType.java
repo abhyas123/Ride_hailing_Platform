@@ -1,4 +1,8 @@
 package com.program.util;
 
-public class VehicleType {
+public enum VehicleType {
+
+    BIKE,
+    AUTO,
+    CAR
 }

@@ -1,4 +1,9 @@
 package com.program.util;
 
-public class KycStatus {
+public enum KycStatus {
+
+    NOT_SUBMITTED,
+    PENDING,
+    VERIFIED,
+    REJECTED
 }

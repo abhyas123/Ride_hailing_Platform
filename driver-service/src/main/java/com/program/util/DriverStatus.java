@@ -1,4 +1,8 @@
 package com.program.util;
 
-public class DriverStatus {
+public enum DriverStatus {
+
+    OFFLINE,
+    ONLINE,
+    BUSY
 }
