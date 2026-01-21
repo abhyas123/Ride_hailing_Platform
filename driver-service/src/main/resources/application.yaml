@@ -5,20 +5,91 @@ spring:
   application:
     name: driver-service
 
+  # =========================
+  # DATABASE (MySQL)
+  # =========================
   datasource:
     url: jdbc:mysql://localhost:3306/driver_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: abhyas555
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+    open-in-view: false
     properties:
       hibernate:
+        format_sql: true
         dialect: org.hibernate.dialect.MySQLDialect
 
+  # =========================
+  # REDIS (Status + Location)
+  # =========================
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2000ms
+
+  # =========================
+  # KAFKA
+  # =========================
+  kafka:
+    bootstrap-servers: localhost:9092
+
+    consumer:
+      group-id: driver-service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+# =========================
+# EUREKA CLIENT
+# =========================
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+  instance:
+    prefer-ip-address: true
+
+# =========================
+# FEIGN CLIENT
+# =========================
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: FULL
+
+# =========================
+# ACTUATOR (OPTIONAL BUT GOOD)
+# =========================
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+# =========================
+# LOGGING
+# =========================
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE

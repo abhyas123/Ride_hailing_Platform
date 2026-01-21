@@ -1,0 +1,70 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: location-service
+
+  # ============================
+  # REDIS CONFIG (Location store)
+  # ============================
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2000
+
+  # ============================
+  # KAFKA CONFIG
+  # ============================
+  kafka:
+    bootstrap-servers: localhost:9092
+
+    consumer:
+      group-id: location-service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+  # ============================
+  # WEBSOCKET (STOMP)
+  # ============================
+  websocket:
+    message-broker:
+      application-destination-prefixes: /app
+      simple-broker: /topic
+
+# ============================
+# EUREKA CLIENT
+# ============================
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+# ============================
+# LOGGING
+# ============================
+logging:
+  level:
+    root: INFO
+    com.program: DEBUG
+    org.springframework.web: INFO
+    org.springframework.kafka: INFO
+    org.springframework.data.redis: INFO
+
+# ============================
+# CUSTOM LOCATION PROPERTIES
+# ============================
+location:
+  search:
+    default-radius-km: 3.0
+    max-radius-km: 10.0
