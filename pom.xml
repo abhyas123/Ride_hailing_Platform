@@ -30,6 +30,7 @@
         <module>user-service</module>
         <module>driver-service</module>
         <module>location-service</module>
+        <module>search-service</module>
     </modules>
 
     <!-- Properties -->
