@@ -2,10 +2,7 @@ package com.program.dto.request;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
@@ -26,4 +23,9 @@ public class PricingEstimateRequest {
 
     @NotNull(message = "Pickup longitude is required")
     private Double pickupLongitude;
+
+    public PricingEstimateRequest(double distanceKm, int etaMinutes) {
+        this.distanceInKm =distanceKm;
+        this.estimatedTimeInMinutes = etaMinutes;
+    }
 }

@@ -14,7 +14,7 @@ import java.util.List;
 public interface PricingServiceClient {
 
     @PostMapping("/pricing/estimate")
-    List<VehicleFareResponse> estimateFare(
+    List<VehicleFareResponse> getFareEstimate(
             @RequestBody PricingEstimateRequest request
     );
 }
