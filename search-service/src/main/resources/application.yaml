@@ -1,0 +1,42 @@
+server:
+  port: 8086
+
+spring:
+  application:
+    name: search-service
+
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connect-timeout: 5000
+            read-timeout: 5000
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+# ==========================
+# MAP API CONFIG
+# ==========================
+map:
+  api:
+    base-url: https://apis.mapmyindia.com/advancedmaps/v1
+    key: YOUR_MAP_API_KEY
+
+# ==========================
+# PRICING SERVICE
+# ==========================
+pricing:
+  service:
+    name: pricing-service
+
+logging:
+  level:
+    root: INFO
+    com.program: DEBUG
+    org.springframework.cloud.openfeign: DEBUG
