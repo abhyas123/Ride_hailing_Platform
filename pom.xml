@@ -31,6 +31,7 @@
         <module>driver-service</module>
         <module>location-service</module>
         <module>search-service</module>
+        <module>pricing-service</module>
     </modules>
 
     <!-- Properties -->
