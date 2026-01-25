@@ -8,56 +8,40 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(
-        name = "fare_audit",
-        indexes = {
-                @Index(name = "idx_fare_ride_id", columnList = "ride_id", unique = true),
-                @Index(name = "idx_fare_driver_id", columnList = "driver_id"),
-                @Index(name = "idx_fare_created_at", columnList = "created_at")
-        }
-)
-@Getter
-@Setter
+@Table(name = "fare_audit")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class FareAudit {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id;
 
-    @Column(name = "ride_id", nullable = false, columnDefinition = "BINARY(16)")
+    @Column(nullable = false)
     private UUID rideId;
 
-    @Column(name = "driver_id", columnDefinition = "BINARY(16)")
-    private UUID driverId;
-
     @Enumerated(EnumType.STRING)
-    @Column(name = "vehicle_type", nullable = false, length = 20)
+    @Column(nullable = false)
     private VehicleType vehicleType;
 
     @Column(nullable = false)
-    private Double distanceKm;
+    private Double baseFare;
 
     @Column(nullable = false)
-    private Long durationMinutes;
+    private Double distanceFare;
 
     @Column(nullable = false)
-    private Double surgeMultiplier;
+    private Double timeFare;
 
-    @Column(name = "total_fare", nullable = false)
+    @Column(nullable = false)
+    private Double nightCharge;
+
+    @Column(nullable = false)
     private Double totalFare;
 
-    @Column(name = "platform_fee", nullable = false)
-    private Double platformFee;
-
-    @Column(name = "driver_earning", nullable = false)
-    private Double driverEarning;
-
-    @Column(name = "created_at", nullable = false)
+    @Column(nullable = false)
     private LocalDateTime createdAt;
-
-    @Version
-    private Long version;
 }

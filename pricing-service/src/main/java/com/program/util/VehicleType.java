@@ -1,5 +1,7 @@
 package com.program.util;
 
+import java.util.List;
+
 public enum VehicleType {
 
     BIKE,
@@ -12,5 +14,10 @@ public enum VehicleType {
         } catch (Exception e) {
             throw new IllegalArgumentException("Invalid vehicle type: " + value);
         }
+    }
+
+
+    public static List<VehicleType> supportedTypes() {
+        return List.of(BIKE, AUTO, CAR);
     }
 }

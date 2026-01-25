@@ -10,5 +10,7 @@ import java.util.List;
 @Builder
 public class PricingEstimateResponse {
 
-    private List<VehicleFareResponse> vehicleFares;
+    private Double distanceKm;
+    private Integer estimatedDurationMinutes;
+    private List<VehicleFareResponse> fares;
 }

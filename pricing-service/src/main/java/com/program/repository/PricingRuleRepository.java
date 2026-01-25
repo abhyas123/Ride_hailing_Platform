@@ -10,5 +10,5 @@ import java.util.UUID;
 public interface PricingRuleRepository
         extends JpaRepository<PricingRule, UUID> {
 
-    Optional<PricingRule> findByVehicleType(VehicleType vehicleType);
+    Optional<PricingRule> findByVehicleType(String vehicleType);
 }

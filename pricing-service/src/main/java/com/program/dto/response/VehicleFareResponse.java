@@ -10,6 +10,5 @@ import lombok.*;
 public class VehicleFareResponse {
 
     private VehicleType vehicleType;
-    private Double estimatedFare;
-    private Double surgeMultiplier;
+    private Double fare;
 }
