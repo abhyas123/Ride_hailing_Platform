@@ -1,7 +1,10 @@
 package com.program.exception;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -74,15 +77,26 @@ public class GlobalExceptionHandler {
     }
 
     // ===============================
+    // ILLEGAL STATE (DATABASE ISSUES)
+    // ===============================
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<?> handleIllegalState(IllegalStateException ex) {
+        return buildResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                ex.getMessage()
+        );
+    }
+
+    // ===============================
     // FALLBACK (SAFETY NET)
     // ===============================
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleGenericException(
-            Exception ex
-    ) {
+    public ResponseEntity<?> handleGeneric(Exception ex) {
+        ex.printStackTrace(); // 🔥 IMPORTANT
+
         return buildResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR,
-                "Unexpected pricing service error"
+                "An unexpected error occurred: " + ex.getMessage()
         );
     }
 

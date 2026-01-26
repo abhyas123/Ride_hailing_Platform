@@ -30,16 +30,19 @@ public class SurgePricingService {
         if (multiplier == null) {
             SurgeMultiplier surge =
                     surgeRepository.findByVehicleTypeAndActiveTrue(vehicleType)
-                            .orElseThrow(() ->
-                                    new SurgeNotAvailableException("Surge not found")
-                            );
-            multiplier = surge.getMultiplier();
-            surgeRedisRepository.saveSurgeMultiplier(
-                    vehicleType.name(),
-                    multiplier,
-                    Duration.ofMinutes(30)
-            );
-
+                            .orElse(null);
+            
+            if (surge != null && surge.getMultiplier() != null) {
+                multiplier = surge.getMultiplier();
+                surgeRedisRepository.saveSurgeMultiplier(
+                        vehicleType.name(),
+                        multiplier,
+                        Duration.ofMinutes(30)
+                );
+            } else {
+                // Use default multiplier if surge not available
+                multiplier = 1.0;
+            }
         }
 
         return fare * multiplier;

@@ -11,8 +11,8 @@ import lombok.*;
 @Builder
 public class PricingEstimateRequest {
 
-    @NotNull
-    private VehicleType vehicleType;
+//    @NotNull
+//    private VehicleType vehicleType;
 
     @NotNull
     @Min(1)
