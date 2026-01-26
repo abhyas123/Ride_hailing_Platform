@@ -1,9 +1,11 @@
 package com.program.entity;
 
+import com.program.util.VehicleType;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(
@@ -13,29 +15,24 @@ import java.time.LocalDateTime;
                 @Index(name = "idx_surge_time", columnList = "start_time,end_time")
         }
 )
-@Getter
-@Setter
+
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class SurgeMultiplier {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue
+    private UUID id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private VehicleType vehicleType;
 
     @Column(nullable = false)
-    private Double multiplier; // e.g. 1.2, 1.5, 2.0
+    private Double multiplier;
 
     @Column(nullable = false)
     private boolean active;
-
-    @Column(name = "start_time", nullable = false)
-    private LocalDateTime startTime;
-
-    @Column(name = "end_time", nullable = false)
-    private LocalDateTime endTime;
-
-    @Version
-    private Long version;
 }

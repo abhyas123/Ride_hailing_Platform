@@ -29,11 +29,10 @@ public class SurgePricingService {
 
         if (multiplier == null) {
             SurgeMultiplier surge =
-                    surgeRepository.findByCityAndActiveTrue(vehicleType.name())
+                    surgeRepository.findByVehicleTypeAndActiveTrue(vehicleType)
                             .orElseThrow(() ->
                                     new SurgeNotAvailableException("Surge not found")
                             );
-
             multiplier = surge.getMultiplier();
             surgeRedisRepository.saveSurgeMultiplier(
                     vehicleType.name(),

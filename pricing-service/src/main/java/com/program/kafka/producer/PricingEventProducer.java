@@ -7,10 +7,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class PricingEventProducer {
 
-    private final KafkaTemplate<String, PricingEvent> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     public PricingEventProducer(
-            KafkaTemplate<String, PricingEvent> kafkaTemplate
+            KafkaTemplate<String, Object> kafkaTemplate
     ) {
         this.kafkaTemplate = kafkaTemplate;
     }
@@ -34,7 +34,7 @@ public class PricingEventProducer {
     }
 
     // ===============================
-    // EVENT DTO (Produced)
+    // EVENT DTO
     // ===============================
     @Getter
     public static class PricingEvent {
@@ -52,6 +52,5 @@ public class PricingEventProducer {
             this.distanceInKm = distanceInKm;
             this.durationInMinutes = durationInMinutes;
         }
-
     }
 }
