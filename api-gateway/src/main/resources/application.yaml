@@ -6,29 +6,110 @@ spring:
     name: api-gateway
 
   cloud:
-     gateway:
-        routes:
+    gateway:
+      routes:
+        # ================================
+        # AUTH SERVICE (Public)
+        # ================================
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/auth/**
+          filters:
+            - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+            - StripPrefix=0
 
-          - id: auth-service
-            uri: lb://auth-service
-            predicates:
-              - Path=/auth/**
-            filters:
-              - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+        # ================================
+        # USER SERVICE (Protected)
+        # ================================
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/users/**
+          filters:
+            - name: JwtAuthenticationFilter
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 10
+                redis-rate-limiter.burstCapacity: 20
+                key-resolver: "#{@userKeyResolver}"
+            - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+            - StripPrefix=0
 
-          - id: user-service
-            uri: lb://user-service
-            predicates:
-              - Path=/users/**
-            filters:
-              - name: RequestRateLimiter
-                args:
-                  redis-rate-limiter.replenishRate: 10
-                  redis-rate-limiter.burstCapacity: 20
-                  key-resolver: "#{@userKeyResolver}"
+        # ================================
+        # PRICING SERVICE (Protected)
+        # ================================
+        - id: pricing-service
+          uri: lb://pricing-service
+          predicates:
+            - Path=/pricing/**
+          filters:
+            - name: JwtAuthenticationFilter
+            - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+            - StripPrefix=0
 
+        # ================================
+        # SEARCH SERVICE (Protected)
+        # ================================
+        - id: search-service
+          uri: lb://search-service
+          predicates:
+            - Path=/search/**
+          filters:
+            - name: JwtAuthenticationFilter
+            - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+            - StripPrefix=0
 
+        # ================================
+        # DRIVER SERVICE (Protected)
+        # ================================
+        - id: driver-service
+          uri: lb://driver-service
+          predicates:
+            - Path=/drivers/**
+          filters:
+            - name: JwtAuthenticationFilter
+            - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+            - StripPrefix=0
 
+        # ================================
+        # LOCATION SERVICE (Protected)
+        # ================================
+        - id: location-service
+          uri: lb://location-service
+          predicates:
+            - Path=/location/**
+          filters:
+            - name: JwtAuthenticationFilter
+            - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+            - StripPrefix=0
+
+      # ================================
+      # GLOBAL CORS CONFIGURATION
+      # ================================
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            allowCredentials: true
+            maxAge: 3600
+
+      # ================================
+      # DEFAULT FILTERS
+      # ================================
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+
+# ================================
+# EUREKA DISCOVERY
+# ================================
 eureka:
   client:
     service-url:
@@ -36,5 +117,17 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
 
+# ================================
+# JWT CONFIGURATION
+# ================================
 jwt:
   secret: RideHailingSecretKey1234567890
+
+# ================================
+# LOGGING
+# ================================
+logging:
+  level:
+    root: INFO
+    com.program: DEBUG
+    org.springframework.cloud.gateway: DEBUG
