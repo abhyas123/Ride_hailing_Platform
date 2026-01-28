@@ -32,6 +32,7 @@
         <module>location-service</module>
         <module>search-service</module>
         <module>pricing-service</module>
+        <module>admin-service</module>
     </modules>
 
     <!-- Properties -->
