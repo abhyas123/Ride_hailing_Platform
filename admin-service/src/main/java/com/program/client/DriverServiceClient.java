@@ -1,7 +1,11 @@
 package com.program.client;
 
+import com.program.dto.response.DriverDetailsResponse;
+import com.program.dto.response.PendingDriverResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @FeignClient(
         name = "driver-service",
@@ -9,13 +13,39 @@ import org.springframework.web.bind.annotation.*;
 )
 public interface DriverServiceClient {
 
-    // ===== APPROVE DRIVER =====
+    // ===============================
+    // GET PENDING DRIVERS
+    // ===============================
+    @GetMapping("/pending")
+    List<PendingDriverResponse> getPendingDrivers();
+
+    // ===============================
+    // GET DRIVER DETAILS
+    // ===============================
+    @GetMapping("/{driverId}/details")
+    DriverDetailsResponse getDriverDetails(
+            @PathVariable("driverId") String driverId
+    );
+
+    // ===============================
+    // CHECK APPROVAL STATUS
+    // ===============================
+    @GetMapping("/{driverId}/approved")
+    boolean isDriverApproved(
+            @PathVariable("driverId") String driverId
+    );
+
+    // ===============================
+    // APPROVE DRIVER
+    // ===============================
     @PutMapping("/{driverId}/approve")
     void approveDriver(
             @PathVariable("driverId") String driverId
     );
 
-    // ===== REJECT DRIVER =====
+    // ===============================
+    // REJECT DRIVER
+    // ===============================
     @PutMapping("/{driverId}/reject")
     void rejectDriver(
             @PathVariable("driverId") String driverId,
