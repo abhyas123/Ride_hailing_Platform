@@ -33,6 +33,7 @@
         <module>search-service</module>
         <module>pricing-service</module>
         <module>admin-service</module>
+        <module>ride-service</module>
     </modules>
 
     <!-- Properties -->
