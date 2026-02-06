@@ -26,16 +26,16 @@ public class AdminAuditService {
     ) {
 
         AdminActionAudit audit = AdminActionAudit.builder()
-                .driverId(UUID.fromString(driverId))   // ✅ FIX
-                .adminId(getSystemAdminId())            // ✅ FIX
-                .actionType(actionType)                 // ✅ FIX
+                .driverId(UUID.fromString(driverId))
+                .adminId(getSystemAdminId())
+                .actionType(actionType)
                 .approvalStatus(
                         actionType == AdminActionType.APPROVE_DRIVER
                                 ? ApprovalStatus.APPROVED
                                 : ApprovalStatus.REJECTED
                 )
                 .reason(reason)
-                .actionAt(LocalDateTime.now())          // ✅ FIX
+                .actionAt(LocalDateTime.now())
                 .build();
 
         auditRepository.save(audit);

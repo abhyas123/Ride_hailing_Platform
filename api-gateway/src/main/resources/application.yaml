@@ -8,9 +8,15 @@ spring:
   cloud:
     gateway:
       routes:
-        # ================================
-        # AUTH SERVICE (Public)
-        # ================================
+        - id: admin-service
+          uri: lb://admin-service
+          predicates:
+            - Path=/admin/**
+          filters:
+            - name: JwtAuthenticationFilter
+            - name: AdminOnlyFilter
+            - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+            - StripPrefix=0
         - id: auth-service
           uri: lb://auth-service
           predicates:

@@ -1,0 +1,97 @@
+server:
+  port: 8088
+
+spring:
+  application:
+    name: ride-service
+
+  # ==============================
+  # DATABASE CONFIGURATION
+  # ==============================
+  datasource:
+    url: jdbc:mysql://localhost:3306/ride_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: abhyas555
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+    open-in-view: false
+
+  # ==============================
+  # REDIS CONFIGURATION (Matching)
+  # ==============================
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2000ms
+
+  # ==============================
+  # KAFKA CONFIGURATION
+  # ==============================
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+    consumer:
+      group-id: ride-service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+
+# ==============================
+# EUREKA DISCOVERY
+# ==============================
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+# ==============================
+# FEIGN CLIENT
+# ==============================
+feign:
+  client:
+    config:
+      default:
+        connect-timeout: 5000
+        read-timeout: 5000
+        logger-level: FULL
+
+# ==============================
+# LOGGING
+# ==============================
+logging:
+  level:
+    root: INFO
+    com.program: DEBUG
+    
+# ==============================
+# CUSTOM RIDE PROPERTIES
+# ==============================
+ride:
+  otp-length: 6
+  otp-expiry-minutes: 10
+
+# ==============================
+# FIREBASE CLOUD MESSAGING
+# ==============================
+firebase:
+  credentials-path: classpath:firebase-credentials.json
+  
+notification:
+  enabled: true
+  retry-attempts: 3
+
